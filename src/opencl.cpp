@@ -14,7 +14,6 @@ static v8::Handle<v8::Value> GetPlatforms(const v8::Arguments& args) {
     }
 
     std::vector<cl::Platform>::iterator it;
-    std::cout << platforms.size() << std::endl;
     v8::Local<v8::Array> array = v8::Array::New(platforms.size());
     int j=0;
     for(it = platforms.begin(); it != platforms.end(); ++it) {
