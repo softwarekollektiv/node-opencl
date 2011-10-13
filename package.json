@@ -1,0 +1,23 @@
+{
+  "author": "Philipp Borgers <borgers@mi.fu-berlin.de>",
+  "name": "opencl",
+  "description": "opencl bindings for nodejs",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/softwarekollektiv/node-opencl.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "vows tests/*"
+  },
+  "engines": {
+    "node": "~v0.4.9"
+  },
+  "dependencies": {
+    "coffee-script": "*"
+  },
+  "devDependencies": {
+    "vows": "*"
+  }
+}
