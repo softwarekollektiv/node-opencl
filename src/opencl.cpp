@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-static v8::Handle<v8::Value> GetPlatforms(const v8::Arguments& args) {
+v8::Handle<v8::Value> GetPlatforms(const v8::Arguments& args) {
     v8::HandleScope scope;
     cl_int err;
     std::vector<cl::Platform> platforms;

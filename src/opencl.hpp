@@ -8,3 +8,5 @@
 #include "device.hpp"
 
 using namespace node;
+
+static v8::Handle<v8::Value> GetPlatforms(const v8::Arguments& args);
