@@ -21,5 +21,5 @@ def build(bld):
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.cxxflags = ["-g", "-D_LARGEFILE_SOURCE", "-Wall","-fpermissive"]
   obj.target = 'opencl'
-  obj.source = "src/opencl.cpp src/platform.cpp src/device.cpp src/context.cpp src/program.cpp"
+  obj.source = "src/opencl.cpp src/platform.cpp src/device.cpp src/context.cpp src/program.cpp src/kernel.cpp src/commandqueue.cpp"
   obj.uselib = "OPENCL"

@@ -16,6 +16,7 @@ class Context : public ObjectWrap {
     protected:
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
         static v8::Handle<v8::Value> GetInfo(const v8::Arguments& args);
+        static v8::Handle<v8::Value> GetDevices(const v8::Arguments& args);
 };
 
 #endif

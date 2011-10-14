@@ -10,6 +10,8 @@
 #include "device.hpp"
 #include "context.hpp"
 #include "program.hpp"
+#include "kernel.hpp"
+#include "commandqueue.hpp"
 
 using namespace node;
 
