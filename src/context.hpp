@@ -11,12 +11,11 @@ class Context : public ObjectWrap {
         Context();
         static v8::Handle<v8::Value> New(cl::Context context);
         static v8::Persistent<v8::FunctionTemplate> constructor;
+        cl::Context _context;
 
     protected:
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
         static v8::Handle<v8::Value> GetInfo(const v8::Arguments& args);
-    private:
-        cl::Context _context;
 };
 
 #endif

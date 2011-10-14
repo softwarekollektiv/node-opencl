@@ -35,6 +35,8 @@ extern "C" {
         Initialize(target);
         Platform::Initialize(target);
         Device::Initialize(target);
+        Context::Initialize(target);
+        Program::Initialize(target);
     }
 
     NODE_MODULE(opencl, init);

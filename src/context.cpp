@@ -1,5 +1,6 @@
 #include "opencl.hpp"
 #include "context.hpp"
+#include <iostream>
 
 v8::Handle<v8::Value> Context::New(cl::Context context) {
     v8::HandleScope scope;
@@ -19,9 +20,30 @@ Context::~Context() {
 
 v8::Handle<v8::Value> Context::New(const v8::Arguments& args) {
     v8::HandleScope scope;
-    Context *c = new Context();
-    c->Wrap(args.This());
-    return args.This();
+    Platform *platform = ObjectWrap::Unwrap<Platform>(args[1]->ToObject());
+    try {
+        //std::vector<cl::Platform> platforms;
+        //cl::Platform::get(&platforms);
+
+        cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform->_platform)(), 0};
+        cl::Context context(args[0]->IntegerValue(), cps);
+        Context *c = new Context(context);
+        c->Wrap(args.This());
+        return args.This();
+    }
+    catch(cl::Error error) {
+        return v8::ThrowException(v8::Exception::Error(v8::String::New(error.what())));
+    }
+
+}
+
+v8::Handle<v8::Value> Context::GetInfo(const v8::Arguments& args) {
+    v8::HandleScope scope;
+    Context *context = ObjectWrap::Unwrap<Context>(args.This());
+    std::string info;
+    context->_context.getInfo(args[0]->NumberValue(),&info);
+    return scope.Close(v8::String::New(info.data()));
+
 }
 
 v8::Persistent<v8::FunctionTemplate> Context::constructor;
@@ -32,4 +54,9 @@ void Context::Initialize(v8::Handle<v8::Object> target) {
     constructor = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(Context::New));
     constructor->InstanceTemplate()->SetInternalFieldCount(1);
     constructor->SetClassName(v8::String::NewSymbol("Context"));
+
+    NODE_SET_PROTOTYPE_METHOD(constructor, "getInfo", Context::GetInfo);
+
+    target->Set(v8::String::NewSymbol("Context"), constructor->GetFunction());
+
 }

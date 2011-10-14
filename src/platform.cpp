@@ -55,7 +55,7 @@ v8::Handle<v8::Value> Platform::GetInfo(const v8::Arguments& args) {
     v8::HandleScope scope;
     Platform *p = ObjectWrap::Unwrap<Platform>(args.This());
     std::string info;
-    p->_platform.getInfo(CL_PLATFORM_NAME,&info);
+    p->_platform.getInfo(args[0]->NumberValue(),&info);
     return scope.Close(v8::String::New(info.data()));
 
 }

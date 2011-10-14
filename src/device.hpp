@@ -10,11 +10,10 @@ class Device : public ObjectWrap {
         ~Device();
         Device();
         static v8::Handle<v8::Value> New(cl::Device device);
+        cl::Device _device;
 
     protected:
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
-    private:
-        cl::Device _device;
 };
 
 #endif

@@ -2,10 +2,14 @@
 #include <node.h>
 
 #include <stdlib.h>
+
+#define __CL_ENABLE_EXCEPTIONS
 #include <CL/cl.hpp>
 
 #include "platform.hpp"
 #include "device.hpp"
+#include "context.hpp"
+#include "program.hpp"
 
 using namespace node;
 
