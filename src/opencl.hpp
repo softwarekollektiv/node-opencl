@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define __CL_ENABLE_EXCEPTIONS
+//define __CL_ENABLE_EXCEPTIONS
 #include <CL/cl.hpp>
 
 #include "platform.hpp"

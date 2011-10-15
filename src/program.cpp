@@ -4,7 +4,7 @@
 
 v8::Persistent<v8::FunctionTemplate> Program::constructor;
 
-Program::Program(cl::Program program) {
+Program::Program(cl::Program *program) {
     _program = program;
 }
 
@@ -13,7 +13,8 @@ v8::Handle<v8::Value> Program::New(const v8::Arguments& args) {
     Context *context = ObjectWrap::Unwrap<Context>(args[0]->ToObject());
     std::string code = *v8::String::Utf8Value(args[1]->ToString());
     cl::Program::Sources sources(1, std::make_pair(code.data(),code.size()));
-    Program *p = new Program(cl::Program(context->_context, sources, NULL));
+    cl::Program *program = new cl::Program(*context->_context, sources, NULL);
+    Program *p = new Program(program);
     p->Wrap(args.This());
     return args.This();
 }
@@ -28,13 +29,9 @@ v8::Handle<v8::Value> Program::Build(const v8::Arguments& args) {
         Device *d = ObjectWrap::Unwrap<Device>(t->ToObject());
         devices.push_back(d->_device);
     }
-    try {
-        program->_program.build(devices);
-        return v8::True();
-    }
-    catch(cl::Error error) {
-        return v8::ThrowException(v8::Exception::Error(v8::String::New(error.what())));
-    }
+
+    cl_int err = program->_program->build(devices);
+    return scope.Close(v8::Integer::New(err));
 }
 
 

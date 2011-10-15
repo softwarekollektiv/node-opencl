@@ -6,19 +6,32 @@ opencl = require "../index"
 Kernel = opencl.Kernel
 Context = opencl.Context
 CommandQueue = opencl.CommandQueue
+[platform] = opencl.getPlatforms()
+context = new Context opencl.CL_DEVICE_TYPE_ALL, platform
 
-#program = new opencl.Program context, source
-#source = "__kernel void hello(){}"
+source = "__kernel void hello(){}"
+program = new opencl.Program context, source
+
+program.build context.getDevices()
+
+kernel = new Kernel program, "hello"
 
 tests = (vows.describe "CommandQueue").addBatch
 
   "A CommandQueue":
     topic: ->
-      context = new Context opencl.CL_DEVICE_TYPE_ALL, opencl.getPlatforms()[0]
       new CommandQueue context, context.getDevices()[0]
 
-    "should be an instance of CommandQueue": (kernel) ->
-      assert.instanceOf context, CommandQueue
+    "should be an instance of CommandQueue": (queue) ->
+      assert.instanceOf queue, CommandQueue
+
+    "should have a enqueueNDRangeKernel function": (queue) ->
+      assert.isFunction queue.enqueueNDRangeKernel
+      assert.equal (queue.enqueueNDRangeKernel kernel), 0
+
+    "should have a finish function": (queue) ->
+      assert.isFunction queue.finish
+      assert.equal queue.finish(), 0
 
 
 tests.export module

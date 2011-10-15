@@ -17,7 +17,7 @@ tests = (vows.describe "Kernel").addBatch
       new Kernel program, "hello"
 
     "should be an instance of Kernel": (kernel) ->
-      assert.instanceOf context, Context
+      assert.instanceOf kernel, Kernel
 
 
 

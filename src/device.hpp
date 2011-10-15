@@ -6,10 +6,10 @@
 class Device : public ObjectWrap {
     public:
         static void Initialize(v8::Handle<v8::Object> target);
-        Device(cl::Device device);
+        Device(cl::Device &device);
         ~Device();
         Device();
-        static v8::Handle<v8::Value> New(cl::Device device);
+        static v8::Handle<v8::Value> New(cl::Device &device);
         cl::Device _device;
 
     protected:

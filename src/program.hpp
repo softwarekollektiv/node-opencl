@@ -5,9 +5,9 @@
 
 class Program : public ObjectWrap {
     public:
-        cl::Program _program;
+        cl::Program *_program;
 
-        Program(cl::Program program);
+        Program(cl::Program *program);
 
         static v8::Persistent<v8::FunctionTemplate> constructor;
 

@@ -18,7 +18,7 @@ tests = (vows.describe "Program").addBatch
 
     "should have a build function": (program) ->
       assert.isFunction program.build
-      assert.isTrue program.build context.getDevices()
+      assert.equal (program.build context.getDevices()), 0
 
 
 tests.export module

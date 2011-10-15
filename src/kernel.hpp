@@ -5,9 +5,9 @@
 
 class Kernel : public ObjectWrap {
     public:
-        cl::Kernel _kernel;
+        cl::Kernel *_kernel;
 
-        Kernel(cl::Kernel kernel);
+        Kernel(cl::Kernel *kernel);
 
         static v8::Persistent<v8::FunctionTemplate> constructor;
         static void Initialize(v8::Handle<v8::Object> target);

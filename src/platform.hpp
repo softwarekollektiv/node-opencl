@@ -8,14 +8,14 @@ class Platform : public ObjectWrap {
         cl::Platform _platform;
 
         Platform();
-        Platform(cl::Platform platform);
+        Platform(cl::Platform &platform);
         ~Platform();
 
         static v8::Persistent<v8::FunctionTemplate> constructor;
 
         static void Initialize(v8::Handle<v8::Object> target);
 
-        static v8::Handle<v8::Value> New(cl::Platform platform);
+        static v8::Handle<v8::Value> New(cl::Platform &platform);
 
     protected:
         static v8::Handle<v8::Value> New(const v8::Arguments& args);

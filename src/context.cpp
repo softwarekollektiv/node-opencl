@@ -2,7 +2,7 @@
 #include "context.hpp"
 #include <iostream>
 
-v8::Handle<v8::Value> Context::New(cl::Context context) {
+v8::Handle<v8::Value> Context::New(cl::Context *context) {
     v8::HandleScope scope;
     Context *c = new Context(context);
     v8::Handle<v8::Value> ext = v8::External::New(c);
@@ -11,7 +11,7 @@ v8::Handle<v8::Value> Context::New(cl::Context context) {
     return scope.Close(obj);
 }
 
-Context::Context(cl::Context context) {
+Context::Context(cl::Context *context) {
     _context = context;
 }
 Context::Context() {}
@@ -24,29 +24,33 @@ v8::Handle<v8::Value> Context::New(const v8::Arguments& args) {
     try {
 
         cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform->_platform)(), 0};
-        cl::Context context(args[0]->IntegerValue(), cps);
+        cl::Context *context = new cl::Context(args[0]->IntegerValue(), cps);
         Context *c = new Context(context);
         c->Wrap(args.This());
         return args.This();
     }
-    catch(cl::Error error) {
-        return v8::ThrowException(v8::Exception::Error(v8::String::New(error.what())));
+    //catch(cl::Error error) {
+    catch(...) {
+        //return v8::ThrowException(v8::Exception::Error(v8::String::New(error.what())));
     }
 
 }
 v8::Handle<v8::Value> Context::GetDevices(const v8::Arguments& args) {
     v8::HandleScope scope;
-    std::vector<cl::Device> devices;
+    std::vector<cl::Device> *devices = new std::vector<cl::Device>();
     Context *context = ObjectWrap::Unwrap<Context>(args.This());
-    context->_context.getInfo(CL_CONTEXT_DEVICES, &devices);
+    context->_context->getInfo(CL_CONTEXT_DEVICES, devices);
 
     std::vector<cl::Device>::iterator it;
-    v8::Local<v8::Array> array = v8::Array::New(devices.size());
-    int j=0;
-    for(it = devices.begin(); it != devices.end(); ++it) {
-        array->Set(j,Device::New(*it));
-        j++;
+    v8::Local<v8::Array> array = v8::Array::New(devices->size());
+    unsigned int j=0;
+    for(j=0; j<devices->size();++j) {
+        array->Set(j, Device::New(devices->at(j)));
     }
+    //for(it = devices->begin(); it != devices->end(); ++it) {
+    //    array->Set(j,Device::New(*it));
+    //    j++;
+    //}
     return scope.Close(array);
 }
 
@@ -54,7 +58,7 @@ v8::Handle<v8::Value> Context::GetInfo(const v8::Arguments& args) {
     v8::HandleScope scope;
     Context *context = ObjectWrap::Unwrap<Context>(args.This());
     std::string info;
-    context->_context.getInfo(args[0]->IntegerValue(),&info);
+    context->_context->getInfo(args[0]->IntegerValue(),&info);
     return scope.Close(v8::String::New(info.data()));
 
 }

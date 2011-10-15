@@ -5,17 +5,16 @@
 
 v8::Persistent<v8::FunctionTemplate> constructor;
 
-v8::Handle<v8::Value> Device::New(cl::Device device) {
+v8::Handle<v8::Value> Device::New(cl::Device &device) {
 
     v8::HandleScope scope;
-    Device* d = new Device(device);
-    //p->device_ = device;
+    Device *d = new Device(device);
     v8::Handle<v8::Value> ext = v8::External::New(d);
     v8::Handle<v8::Object> obj = constructor->GetFunction()->NewInstance(1, &ext);
     return scope.Close(obj);
 
 }
-Device::Device(cl::Device device) {
+Device::Device(cl::Device &device) {
     _device = device;
 }
 
