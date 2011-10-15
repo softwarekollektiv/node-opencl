@@ -27,7 +27,7 @@ v8::Handle<v8::Value> Program::Build(const v8::Arguments& args) {
     for(unsigned int i; i < array->Length(); ++i) {
         v8::Local<v8::Value> t = array->Get(v8::Integer::New(i));
         Device *d = ObjectWrap::Unwrap<Device>(t->ToObject());
-        devices.push_back(d->_device);
+        devices.push_back(*d->_device);
     }
 
     cl_int err = program->_program->build(devices);

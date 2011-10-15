@@ -7,7 +7,7 @@ Kernel = opencl.Kernel
 Context = opencl.Context
 CommandQueue = opencl.CommandQueue
 [platform] = opencl.getPlatforms()
-context = new Context opencl.CL_DEVICE_TYPE_ALL, platform
+context = new Context opencl.CL_DEVICE_TYPE_CPU, platform
 
 source = "__kernel void hello(){}"
 program = new opencl.Program context, source
@@ -15,6 +15,8 @@ program = new opencl.Program context, source
 program.build context.getDevices()
 
 kernel = new Kernel program, "hello"
+
+console.log context.getDevices()[0].getDeviceName()
 
 tests = (vows.describe "CommandQueue").addBatch
 

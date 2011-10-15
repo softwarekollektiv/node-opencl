@@ -13,10 +13,12 @@ v8::Handle<v8::Value> CommandQueue::New(const v8::Arguments& args) {
     Context *context = ObjectWrap::Unwrap<Context>(args[0]->ToObject());
     Device *device = ObjectWrap::Unwrap<Device>(args[1]->ToObject());
     cl_int err;
+    std::string info;
     std::vector<cl::Device> devices;
     context->_context->getInfo(CL_CONTEXT_DEVICES, &devices);
+    device->_device->getInfo(CL_DEVICE_NAME, &info);
     //cl::CommandQueue *queue = new cl::CommandQueue(*context->_context, devices[0], 0, &err);
-    cl::CommandQueue *queue = new cl::CommandQueue(*context->_context, device->_device, 0, &err);
+    cl::CommandQueue *queue = new cl::CommandQueue(*context->_context, *device->_device, 0, &err);
     std::cout << "commandQueue: " << err << std::endl;
     //cl::CommandQueue queue;
     CommandQueue *k = new CommandQueue(queue);

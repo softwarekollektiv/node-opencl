@@ -24,7 +24,9 @@ v8::Handle<v8::Value> Context::New(const v8::Arguments& args) {
     try {
 
         cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform->_platform)(), 0};
-        cl::Context *context = new cl::Context(args[0]->IntegerValue(), cps);
+        cl_int err;
+        cl::Context *context = new cl::Context(args[0]->IntegerValue(), cps, NULL, NULL, &err);
+        std::cout << "context error: " << err << std::endl;
         Context *c = new Context(context);
         c->Wrap(args.This());
         return args.This();
@@ -38,14 +40,20 @@ v8::Handle<v8::Value> Context::New(const v8::Arguments& args) {
 v8::Handle<v8::Value> Context::GetDevices(const v8::Arguments& args) {
     v8::HandleScope scope;
     std::vector<cl::Device> *devices = new std::vector<cl::Device>();
+    //std::vector<cl::Device> devices;
     Context *context = ObjectWrap::Unwrap<Context>(args.This());
-    context->_context->getInfo(CL_CONTEXT_DEVICES, devices);
+    cl_int err = context->_context->getInfo(CL_CONTEXT_DEVICES, devices);
+    std::cout << "getInfo<CL_CONTEXT_DEVICES>: " << err << std::endl;
 
     std::vector<cl::Device>::iterator it;
     v8::Local<v8::Array> array = v8::Array::New(devices->size());
     unsigned int j=0;
+    std::vector<cl::Device>::pointer ptr = &(*devices)[0];
+    std::cout << "GetDevices ptr: " << ptr << std::endl;
+    //cl::Device *device = &devices[0];
     for(j=0; j<devices->size();++j) {
-        array->Set(j, Device::New(devices->at(j)));
+        array->Set(j, Device::New(ptr));
+     //   ++ptr;
     }
     //for(it = devices->begin(); it != devices->end(); ++it) {
     //    array->Set(j,Device::New(*it));

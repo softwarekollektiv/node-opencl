@@ -64,13 +64,15 @@ v8::Handle<v8::Value> Platform::GetDevices(const v8::Arguments& args) {
     using namespace v8;
     HandleScope scope;
     Platform *p = ObjectWrap::Unwrap<Platform>(args.This());
-    std::vector<cl::Device> *devices = new std::vector<cl::Device>();
-    p->_platform.getDevices(CL_DEVICE_TYPE_ALL, devices);
+    std::vector<cl::Device> devices;
+    p->_platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
     std::vector<cl::Device>::iterator it;
-    v8::Local<Array> array = v8::Array::New(devices->size());
+    v8::Local<Array> array = v8::Array::New(devices.size());
     unsigned int j=0;
-    for(j=0; j < devices->size(); ++j) {
-        array->Set(j, Device::New(devices->at(j)));
+    std::vector<cl::Device>::pointer ptr = &devices[0];
+    for(j=0; j < devices.size(); ++j) {
+        array->Set(j, Device::New(ptr));
+        ++ptr;
     }
     /*for(it = devices.begin(); it != devices.end(); ++it) {
         array->Set(j,Device::New(*it)));
