@@ -16,7 +16,7 @@ program.build context.getDevices()
 
 kernel = new Kernel program, "hello"
 
-console.log context.getDevices()[0].getDeviceName()
+#console.log context.getDevices()[0].getDeviceName()
 
 tests = (vows.describe "CommandQueue").addBatch
 

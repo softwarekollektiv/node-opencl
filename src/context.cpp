@@ -21,44 +21,41 @@ Context::~Context() {
 v8::Handle<v8::Value> Context::New(const v8::Arguments& args) {
     v8::HandleScope scope;
     Platform *platform = ObjectWrap::Unwrap<Platform>(args[1]->ToObject());
-    try {
+    cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform->_platform)(), 0};
+    cl_int err;
+    cl::Context *context = new cl::Context(args[0]->IntegerValue(), cps, NULL, NULL, &err);
 
-        cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform->_platform)(), 0};
-        cl_int err;
-        cl::Context *context = new cl::Context(args[0]->IntegerValue(), cps, NULL, NULL, &err);
-        std::cout << "context error: " << err << std::endl;
-        Context *c = new Context(context);
-        c->Wrap(args.This());
-        return args.This();
+    if (err != CL_SUCCESS) {
+        //std::cout << "context error: " << err << std::endl;
+        return v8::ThrowException(v8::Exception::Error(v8::String::New("Error in Context constructor")));
     }
-    //catch(cl::Error error) {
-    catch(...) {
-        //return v8::ThrowException(v8::Exception::Error(v8::String::New(error.what())));
-    }
+
+    Context *c = new Context(context);
+    c->Wrap(args.This());
+    return args.This();
 
 }
+
 v8::Handle<v8::Value> Context::GetDevices(const v8::Arguments& args) {
     v8::HandleScope scope;
     std::vector<cl::Device> *devices = new std::vector<cl::Device>();
     //std::vector<cl::Device> devices;
     Context *context = ObjectWrap::Unwrap<Context>(args.This());
     cl_int err = context->_context->getInfo(CL_CONTEXT_DEVICES, devices);
-    std::cout << "getInfo<CL_CONTEXT_DEVICES>: " << err << std::endl;
+
+    if(err != CL_SUCCESS) {
+        //std::cout << "getInfo<CL_CONTEXT_DEVICES>: " << err << std::endl;
+        return v8::ThrowException(v8::Exception::Error(v8::String::New("Error in context->getInfo(CL_CONTEXT_DEVICES)")));
+    }
 
     std::vector<cl::Device>::iterator it;
     v8::Local<v8::Array> array = v8::Array::New(devices->size());
     unsigned int j=0;
     std::vector<cl::Device>::pointer ptr = &(*devices)[0];
-    std::cout << "GetDevices ptr: " << ptr << std::endl;
-    //cl::Device *device = &devices[0];
-    for(j=0; j<devices->size();++j) {
+    for(j=0; j < devices->size(); ++j) {
         array->Set(j, Device::New(ptr));
-     //   ++ptr;
+        ++ptr;
     }
-    //for(it = devices->begin(); it != devices->end(); ++it) {
-    //    array->Set(j,Device::New(*it));
-    //    j++;
-    //}
     return scope.Close(array);
 }
 

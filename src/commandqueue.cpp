@@ -13,14 +13,11 @@ v8::Handle<v8::Value> CommandQueue::New(const v8::Arguments& args) {
     Context *context = ObjectWrap::Unwrap<Context>(args[0]->ToObject());
     Device *device = ObjectWrap::Unwrap<Device>(args[1]->ToObject());
     cl_int err;
-    std::string info;
-    std::vector<cl::Device> devices;
-    context->_context->getInfo(CL_CONTEXT_DEVICES, &devices);
-    device->_device->getInfo(CL_DEVICE_NAME, &info);
-    //cl::CommandQueue *queue = new cl::CommandQueue(*context->_context, devices[0], 0, &err);
     cl::CommandQueue *queue = new cl::CommandQueue(*context->_context, *device->_device, 0, &err);
-    std::cout << "commandQueue: " << err << std::endl;
-    //cl::CommandQueue queue;
+    if(err != CL_SUCCESS) {
+        //std::cout << "commandQueue error: " << err << std::endl;
+        return v8::ThrowException(v8::Exception::Error(v8::String::New("Error in CommandQueue() constructor")));
+    }
     CommandQueue *k = new CommandQueue(queue);
     k->Wrap(args.This());
     return args.This();
@@ -37,9 +34,6 @@ v8::Handle<v8::Value> CommandQueue::EnqueueNDRangeKernel(const v8::Arguments& ar
     v8::HandleScope scope;
     CommandQueue *queue = ObjectWrap::Unwrap<CommandQueue>(args.This());
     Kernel *kernel = ObjectWrap::Unwrap<Kernel>(args[0]->ToObject());
-    std::string info;
-    kernel->_kernel->getInfo(CL_KERNEL_FUNCTION_NAME, &info);
-    std::cout << info.data() << std::endl;
     //testing
     cl_int err = queue->_commandQueue->enqueueNDRangeKernel(*kernel->_kernel, cl::NullRange, cl::NDRange(4,4), cl::NDRange(2, 2));
     return scope.Close(v8::Integer::New(err));
