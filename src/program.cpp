@@ -1,4 +1,4 @@
-#include "opencl.hpp"
+#include "program.hpp"
 
 #include <iostream>
 

@@ -1,5 +1,13 @@
-#include "opencl.hpp"
 #include <iostream>
+
+#include "opencl.hpp" //common headers
+
+#include "platform.hpp"
+#include "device.hpp"
+#include "context.hpp"
+#include "program.hpp"
+#include "kernel.hpp"
+#include "commandqueue.hpp"
 
 
 v8::Handle<v8::Value> GetPlatforms(const v8::Arguments& args) {

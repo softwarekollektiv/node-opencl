@@ -2,6 +2,7 @@
 #define CONTEXT_HPP
 
 #include "opencl.hpp"
+#include "platform.hpp"
 
 class Context : public ObjectWrap {
     public:

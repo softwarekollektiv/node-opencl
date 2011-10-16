@@ -1,7 +1,8 @@
 #ifndef PLATTFORM_HPP
 #define PLATTFORM_HPP
 
-#include "opencl.hpp"
+#include "opencl.hpp" //common headers
+#include "device.hpp"
 
 class Platform : public ObjectWrap {
     public:

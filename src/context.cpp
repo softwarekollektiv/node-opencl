@@ -1,5 +1,5 @@
-#include "opencl.hpp"
 #include "context.hpp"
+
 #include <iostream>
 
 v8::Handle<v8::Value> Context::New(cl::Context *context) {

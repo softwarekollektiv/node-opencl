@@ -2,6 +2,8 @@
 #define COMMANDQUEUE_HPP
 
 #include "opencl.hpp"
+#include "kernel.hpp"
+#include "device.hpp"
 
 class CommandQueue : public ObjectWrap {
     public:

@@ -1,9 +1,6 @@
-
-#include "opencl.hpp"
 #include "platform.hpp"
+
 #include <iostream>
-
-
 
 v8::Handle<v8::Value> Platform::New(cl::Platform &platform) {
     using namespace v8;
@@ -64,7 +61,7 @@ v8::Handle<v8::Value> Platform::GetDevices(const v8::Arguments& args) {
     using namespace v8;
     HandleScope scope;
     Platform *p = ObjectWrap::Unwrap<Platform>(args.This());
-    std::vector<cl::Device> devices;
+    std::vector<cl::Device> devices; //TODO maybe put this on the heap?
     p->_platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
     std::vector<cl::Device>::iterator it;
     v8::Local<Array> array = v8::Array::New(devices.size());

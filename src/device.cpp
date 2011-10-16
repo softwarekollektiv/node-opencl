@@ -1,5 +1,4 @@
-
-#include "opencl.hpp"
+#include "device.hpp"
 
 #include <iostream>
 

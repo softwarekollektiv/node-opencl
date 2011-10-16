@@ -2,6 +2,7 @@
 #define KERNEL_HPP
 
 #include "opencl.hpp"
+#include "program.hpp"
 
 class Kernel : public ObjectWrap {
     public:

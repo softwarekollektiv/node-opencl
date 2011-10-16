@@ -2,6 +2,8 @@
 #define PROGRAM_HPP
 
 #include "opencl.hpp"
+#include "device.hpp"
+#include "context.hpp"
 
 class Program : public ObjectWrap {
     public:
