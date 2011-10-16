@@ -30,12 +30,29 @@ v8::Handle<v8::Value> CommandQueue::Finish(const v8::Arguments& args) {
     return scope.Close(v8::Integer::New(err));
 }
 
+static cl::NDRange arrayToNDRange(v8::Local<v8::Array> array) {
+    if(array->Length() == 1) {
+        return cl::NDRange(array->Get(v8::Integer::New(0))->IntegerValue());
+    } else if(array->Length() == 2) {
+        return cl::NDRange(array->Get(v8::Integer::New(0))->IntegerValue(),array->Get(v8::Integer::New(1))->IntegerValue());
+    } else {
+        return cl::NDRange(array->Get(v8::Integer::New(0))->IntegerValue(),array->Get(v8::Integer::New(1))->IntegerValue(),array->Get(v8::Integer::New(2))->IntegerValue());
+    }
+}
+
 v8::Handle<v8::Value> CommandQueue::EnqueueNDRangeKernel(const v8::Arguments& args) {
     v8::HandleScope scope;
     CommandQueue *queue = ObjectWrap::Unwrap<CommandQueue>(args.This());
     Kernel *kernel = ObjectWrap::Unwrap<Kernel>(args[0]->ToObject());
-    //testing
-    cl_int err = queue->_commandQueue->enqueueNDRangeKernel(*kernel->_kernel, cl::NullRange, cl::NDRange(4,4), cl::NDRange(2, 2));
+    v8::Local<v8::Array> offset = v8::Local<v8::Array>::Cast(args[1]);
+    v8::Local<v8::Array> global = v8::Local<v8::Array>::Cast(args[2]);
+    v8::Local<v8::Array> local = v8::Local<v8::Array>::Cast(args[3]);
+    cl_int err;
+    if (offset->Length() == 0) {
+        err = queue->_commandQueue->enqueueNDRangeKernel(*kernel->_kernel, cl::NullRange, arrayToNDRange(global), arrayToNDRange(local));
+    } else {
+        err = queue->_commandQueue->enqueueNDRangeKernel(*kernel->_kernel, arrayToNDRange(offset), arrayToNDRange(global), arrayToNDRange(local));
+    }
     return scope.Close(v8::Integer::New(err));
 
 }

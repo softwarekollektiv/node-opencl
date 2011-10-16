@@ -29,7 +29,7 @@ tests = (vows.describe "CommandQueue").addBatch
 
     "should have a enqueueNDRangeKernel function": (queue) ->
       assert.isFunction queue.enqueueNDRangeKernel
-      assert.equal (queue.enqueueNDRangeKernel kernel), 0
+      assert.equal (queue.enqueueNDRangeKernel kernel, [], [4, 4], [2, 2]), 0
 
     "should have a finish function": (queue) ->
       assert.isFunction queue.finish
